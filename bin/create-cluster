@@ -1,0 +1,14 @@
+#!/bin/bash
+
+PROJECT_ID=$(gcloud config get-value project)
+ZONE=us-west1-a
+
+gcloud container clusters create terraform-kcc-demo \
+  --addons ConfigConnector \
+  --enable-stackdriver-kubernetes \
+  --machine-type n1-standard-2 \
+  --workload-pool "${PROJECT_ID}.svc.id.goog" \
+  --num-nodes 3 \
+  --release-channel rapid \
+  --scopes cloud-platform \
+  --zone ${ZONE}

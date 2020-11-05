@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "deleting redisinstance-sample redisInstance resource..."
+kubectl delete redisInstances redisinstance-sample
+
+echo "destroying terraform resources..."
+cd terraform
+terraform destroy -auto-approve

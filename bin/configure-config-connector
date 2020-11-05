@@ -1,0 +1,32 @@
+#!/bin/bash
+
+
+SERVICE_ACCOUNT_NAME=terraform-kcc-demo
+PROJECT_ID=$(gcloud config get-value project)
+SERVICE_ACCOUNT_EMAIL="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+
+gcloud iam service-accounts create terraform-kcc-demo
+
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+  --member="serviceAccount:${SERVICE_ACCOUNT_EMAIL}" \
+  --role="roles/owner"
+
+gcloud iam service-accounts add-iam-policy-binding \
+  ${SERVICE_ACCOUNT_EMAIL} \
+  --member="serviceAccount:${PROJECT_ID}.svc.id.goog[cnrm-system/cnrm-controller-manager]" \
+  --role="roles/iam.workloadIdentityUser"
+
+cat << EOF > configconnector.yaml
+# configconnector.yaml
+apiVersion: core.cnrm.cloud.google.com/v1beta1
+kind: ConfigConnector
+metadata:
+  # the name is restricted to ensure that there is only one
+  # ConfigConnector instance installed in your cluster
+  name: configconnector.core.cnrm.cloud.google.com
+spec:
+ mode: cluster
+ googleServiceAccount: "${SERVICE_ACCOUNT_EMAIL}"
+EOF
+
+echo "Wrote configconnector.yaml"
