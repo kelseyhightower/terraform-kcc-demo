@@ -25,8 +25,8 @@ metadata:
   # ConfigConnector instance installed in your cluster
   name: configconnector.core.cnrm.cloud.google.com
 spec:
- mode: cluster
- googleServiceAccount: "${SERVICE_ACCOUNT_EMAIL}"
+  mode: cluster
+  googleServiceAccount: "${SERVICE_ACCOUNT_EMAIL}"
 EOF
 
 echo "Wrote configconnector.yaml"
